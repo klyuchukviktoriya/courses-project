@@ -1,0 +1,29 @@
+@use "../../common/styles/utils/index" as *;
+
+.coursesPage {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    &__bar {
+        @include glass;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 1240px;
+        padding: 30px 30px;
+
+        .addBtn {
+            @include btn($width: 183px);
+        }
+    }
+}
+
+.coursesList {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+}

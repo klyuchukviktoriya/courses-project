@@ -1,0 +1,106 @@
+:root {
+  --dark: #242424;
+  --light: #e2e2e2;
+  --accent: #fc756e;
+  --shadow: #ffffff4d;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/roboto-v49-cyrillic_latin-300.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-300.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/roboto-v49-cyrillic_latin-600.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-600.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/roboto-v49-cyrillic_latin-900.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-900.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/roboto-v49-cyrillic_latin-regular.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-regular.woff") format("woff");
+}
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.error__message {
+  color: var(--accent);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.error {
+  border-color: var(--accent);
+}
+
+.coursesPage__container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.coursesPage__bar {
+  border-radius: 22px;
+  background: rgba(41, 40, 40, 0.6117647059);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 18px rgba(255, 255, 255, 0.1) inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1240px;
+  padding: 30px 30px;
+}
+.coursesPage__bar .addBtn {
+  color: var(--dark);
+  background-color: rgba(252, 117, 110, 0.7058823529);
+  font-weight: 600;
+  width: 183px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  text-transform: uppercase;
+  border: 2px solid var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+.coursesPage__bar .addBtn:after {
+  background: var(--light);
+  content: "";
+  height: 155px;
+  left: -75px;
+  opacity: 0.2;
+  position: absolute;
+  top: -50px;
+  transform: rotate(35deg);
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+  width: 50px;
+  z-index: -10;
+}
+.coursesPage__bar .addBtn:hover:after {
+  left: 120%;
+  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.coursesList {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}/*# sourceMappingURL=Courses.module.css.map */

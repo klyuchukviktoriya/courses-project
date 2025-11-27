@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 32">
+  <path
+    fill="none"
+    stroke="#ffcc00"
+    stroke-linejoin="miter"
+    stroke-linecap="round"
+    stroke-miterlimit="4"
+    stroke-width="4.8"
+    d="M5.736 4.683c-0.921 0.115-0.139 1.483 0.373 1.641 1.388 0.427 2.623-0.688 2.080-2.163-0.421-1.144-2.296-0.544-2.569 0.439-0.559 2.012 1.212 1.921 2.502 1.276"
+  />
+  <path
+    fill="none"
+    stroke="#ffcc00"
+    stroke-linejoin="miter"
+    stroke-linecap="round"
+    stroke-miterlimit="4"
+    stroke-width="4.8"
+    d="M23.931 3.937c-0.362 0-1.341 0.265-1.185 0.812 0.165 0.578 1.763 0.415 2.163 0.232 1.908-0.872-0.971-2.853-1.574-1.044"
+  />
+  <path
+    fill="none"
+    stroke="#ffcc00"
+    stroke-linejoin="miter"
+    stroke-linecap="round"
+    stroke-miterlimit="4"
+    stroke-width="4.8"
+    d="M3.2 19.896c0 1.978 1.974 4.228 3.273 5.527 2.531 2.531 6.671 3.839 10.217 3.87 5.191 0.046 9.657-0.584 13.564-4.251 2.876-2.699 5.311-6.344 5.311-10.366"
+  />
+</svg>

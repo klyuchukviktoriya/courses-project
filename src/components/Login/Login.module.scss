@@ -1,0 +1,9 @@
+@use "../../common/styles/utils/index" as *;
+
+.login {
+    @include user-page;
+
+    &__button {
+        @include btn;
+    }
+}

@@ -1,0 +1,95 @@
+@use "./variables" as *;
+
+@mixin btn($font-size: 16px, $width: 140px, $height: 54px) {
+    color: var(--dark);
+    background-color: #fc756eb4;
+    font-weight: 600;
+    width: $width;
+    height: $height;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    text-transform: uppercase;
+    border: 2px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+
+    &:after {
+        background: var(--light);
+        content: "";
+        height: 155px;
+        left: -75px;
+        opacity: .2;
+        position: absolute;
+        top: -50px;
+        transform: rotate(35deg);
+        transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        width: 50px;
+        z-index: -10;
+    }
+
+    &:hover {
+        &:after {
+            left: 120%;
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+    }
+}
+
+@mixin glass {
+    border-radius: 22px;
+    background: #2928289c;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        0 0 18px rgba(255, 255, 255, 0.1) inset;
+}
+
+@mixin user-page {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    align-items: center;
+
+    h2 {
+        font-size: 32px;
+    }
+
+    .form__wrapper {
+        @include glass;
+        width: 720px;
+        padding: 60px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+
+        label {
+            margin-left: 24px;
+        }
+
+        button {
+            @include btn($width: 360px);
+            margin: 0 auto;
+        }
+    }
+
+    p {
+        text-align: center;
+
+        a {
+            font-size: 20px;
+            transition: all 0.3s ease;
+            text-decoration: underline var(--accent);
+            text-underline-offset: 4px;
+
+            &:hover {
+                color: var(--accent);
+            }
+        }
+    }
+}

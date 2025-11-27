@@ -1,0 +1,29 @@
+@use "../styles/utils/index" as *;
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+
+    // &__label {}
+
+    &__placeholder {
+        outline: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+    }
+
+    &__warning {
+        border-color: var(--accent);
+    }
+
+    &__error {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -28px;
+        color: var(--accent);
+        font-size: 14px;
+    }
+}

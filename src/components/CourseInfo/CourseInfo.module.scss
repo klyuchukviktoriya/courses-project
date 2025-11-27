@@ -1,0 +1,70 @@
+@use "../../common/styles/utils/index" as *;
+
+.info {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    &__title {
+        font-size: 32px;
+        font-weight: 600;
+        margin-left: 40px;
+    }
+
+    &__div {
+        padding: 40px;
+        border-radius: 30px;
+        @include glass;
+        margin-bottom: 46px;
+    }
+
+    &__header {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    &__flex {
+        display: flex;
+        gap: 32px;
+    }
+
+    &__text {
+        flex: 1;
+        padding-right: 32px;
+        border-right: 2px solid var(--accent);
+    }
+
+    &__table {
+        flex: 1;
+
+        td {
+            vertical-align: middle;
+        }
+    }
+
+    &__authors {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 380px;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    .backLink {
+        display: block;
+        margin-left: auto;
+        width: 185px;
+    }
+
+    .backBtn {
+        @include btn($width: 185px);
+
+        &::after {
+            z-index: 1;
+        }
+    }
+}

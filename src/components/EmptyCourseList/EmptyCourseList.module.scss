@@ -1,0 +1,25 @@
+@use "../../common/styles/utils/index" as *;
+
+.empty {
+    &__container {
+        @include glass;
+        text-align: center;
+        padding: 40px;
+        border-radius: 30px;
+    }
+
+    &__title {
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+
+    &__text {
+        margin-bottom: 40px;
+    }
+
+    .addBtn {
+        @include btn($width: 183px);
+        margin: 0 auto;
+    }
+}

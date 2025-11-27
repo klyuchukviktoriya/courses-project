@@ -1,0 +1,12 @@
+@use "../../../../common/styles/utils/index" as *;
+
+.searchBar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    .searchBth {
+        @include btn($width: 148px);
+        margin-top: 4px;
+    }
+}

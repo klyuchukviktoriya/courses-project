@@ -1,0 +1,72 @@
+:root {
+  --dark: #242424;
+  --light: #e2e2e2;
+  --accent: #fc756e;
+  --shadow: #ffffff4d;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/roboto-v49-cyrillic_latin-300.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-300.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/roboto-v49-cyrillic_latin-600.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-600.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/roboto-v49-cyrillic_latin-900.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-900.woff") format("woff");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/roboto-v49-cyrillic_latin-regular.woff2") format("woff2"), url("../fonts/roboto-v49-cyrillic_latin-regular.woff") format("woff");
+}
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.error__message {
+  color: var(--accent);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.error {
+  border-color: var(--accent);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+.input__placeholder {
+  outline: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+}
+.input__warning {
+  border-color: var(--accent);
+}
+.input__error {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -28px;
+  color: var(--accent);
+  font-size: 14px;
+}/*# sourceMappingURL=Input.module.css.map */

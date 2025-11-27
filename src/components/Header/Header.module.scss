@@ -1,0 +1,60 @@
+@use "../../common/styles/utils/index" as *;
+
+.header {
+    margin-bottom: 64px;
+
+    &__container {
+        width: 1240px;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        padding: 20px 30px;
+        align-items: center;
+        gap: 24px;
+
+        h1 {
+            text-transform: uppercase;
+            font-size: 32px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            background: linear-gradient(90deg, #242424, #fff, #242424);
+            background-repeat: no-repeat;
+            background-size: 80%;
+            animation: animate 5s linear infinite;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0);
+        }
+
+        @keyframes animate {
+            0% {
+                background-position: -500%;
+            }
+
+            100% {
+                background-position: 500%;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 260px;
+        justify-content: flex-end;
+    }
+
+    &__user {
+        font-weight: 600;
+        color: var(--light);
+        letter-spacing: 0.2px;
+    }
+
+    .logBtn {
+        @include btn;
+        position: relative;
+        z-index: 2;
+    }
+}
