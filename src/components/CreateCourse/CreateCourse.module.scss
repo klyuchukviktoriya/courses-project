@@ -1,0 +1,21 @@
+@use "../../common/styles/utils/index" as *;
+
+.create {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+
+
+    }
+
+    &__wrapper {
+        @include glass;
+        padding: 60px;
+    }
+
+    &__form {
+        border: solid 1px red;
+
+    }
+}

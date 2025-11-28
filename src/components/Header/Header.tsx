@@ -34,7 +34,7 @@ export default function Header({ userName, isAuth, onLogout }: HeaderProps) {
             <div className={`${css.header__container} ${css.container}`}>
                 <Logo />
                 <h1>find your perfect course</h1>
-                {showAuth && (
+                {isAuth ? showAuth && (
                     <div className={css.header__actions}>
                         <span className={css.header__user}>{displayName}</span>
                         <Button
@@ -43,7 +43,9 @@ export default function Header({ userName, isAuth, onLogout }: HeaderProps) {
                             onClick={handleLogout}
                         />
                     </div>
-                )}
+                ) :
+                    <div className={css.header__empty}></div>}
+
             </div>
         </header>
     );

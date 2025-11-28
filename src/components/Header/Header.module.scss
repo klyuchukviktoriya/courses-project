@@ -38,11 +38,16 @@
         }
     }
 
+    &__empty {
+        width: 260px;
+        margin-top: 4px;
+    }
+
     &__actions {
         display: flex;
         align-items: center;
         gap: 16px;
-        min-width: 260px;
+        width: 260px;
         justify-content: flex-end;
     }
 

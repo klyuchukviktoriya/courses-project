@@ -102,117 +102,117 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
         <section className={css.create}>
             <div className={`${css.create__container} ${css.container}`}>
                 <h2>Course Edit/Create Page</h2>
+                <div className={css.create__wrapper}>
+                    <h3>Main Info</h3>
+                    <form
+                        className={css.create__form}
+                        onSubmit={e => {
+                            e.preventDefault();
+                            handleCreateCourse();
+                        }}>
+                        <div>
+                            <Input
+                                labelText="Title"
+                                onChange={e => setTitle(e.target.value)}
+                                placeholderText="Title"
+                                id="title"
+                                inputType="text"
+                                errorMessage={errors.title}
+                                value={title}
+                            />
 
-                <form
-                    className={css.create}
-                    onSubmit={e => {
-                        e.preventDefault();
-                        handleCreateCourse();
-                    }}
-                >
-                    <div>
-                        <h3>Main Info</h3>
+                            <Input
+                                labelText="Description"
+                                onChange={e => setDescription(e.target.value)}
+                                placeholderText="Description"
+                                id="description"
+                                inputType="textarea"
+                                errorMessage={errors.description}
+                                value={description}
+                            />
+                        </div>
 
-                        <Input
-                            labelText="Title"
-                            onChange={e => setTitle(e.target.value)}
-                            placeholderText="Title"
-                            id="title"
-                            inputType="text"
-                            errorMessage={errors.title}
-                            value={title}
-                        />
+                        <div>
+                            <h3>Duration</h3>
+                            <Input
+                                labelText="Duration (min)"
+                                onChange={e =>
+                                    setDuration(e.target.value.replace(/\D/g, ""))
+                                }
+                                placeholderText="Duration"
+                                id="duration"
+                                inputType="text"
+                                errorMessage={errors.duration}
+                                value={duration}
+                            />
+                            <p>{getCourseDuration(Number(duration))}</p>
+                        </div>
 
-                        <Input
-                            labelText="Description"
-                            onChange={e => setDescription(e.target.value)}
-                            placeholderText="Description"
-                            id="description"
-                            inputType="textarea"
-                            errorMessage={errors.description}
-                            value={description}
-                        />
-                    </div>
+                        <div>
+                            <h3>Authors</h3>
 
-                    <div>
-                        <h3>Duration</h3>
-                        <Input
-                            labelText="Duration (min)"
-                            onChange={e =>
-                                setDuration(e.target.value.replace(/\D/g, ""))
-                            }
-                            placeholderText="Duration"
-                            id="duration"
-                            inputType="text"
-                            errorMessage={errors.duration}
-                            value={duration}
-                        />
-                        <p>{getCourseDuration(Number(duration))}</p>
-                    </div>
+                            <Input
+                                labelText="Author Name"
+                                onChange={e => setNewAuthorName(e.target.value)}
+                                placeholderText="Author Name"
+                                id="authorName"
+                                inputType="text"
+                                value={newAuthorName}
+                                errorMessage={errors.authorName}
+                            />
 
-                    <div>
-                        <h3>Authors</h3>
+                            <Button
+                                className={css.create__btn}
+                                buttonText="Create author"
+                                type="button"
+                                onClick={handleCreateAuthor}
+                            />
 
-                        <Input
-                            labelText="Author Name"
-                            onChange={e => setNewAuthorName(e.target.value)}
-                            placeholderText="Author Name"
-                            id="authorName"
-                            inputType="text"
-                            value={newAuthorName}
-                            errorMessage={errors.authorName}
-                        />
+                            <h4>Authors List</h4>
+                            {authors.length > 0 ? (
+                                authors.map(author => (
+                                    <AuthorItem
+                                        key={author.id}
+                                        author={author}
+                                        buttonText="Add author"
+                                        onButtonClick={handleAddAuthor}
+                                    />
+                                ))
+                            ) : (
+                                <p>No authors available</p>
+                            )}
 
-                        <Button
-                            className={css.create__btn}
-                            buttonText="Create author"
-                            type="button"
-                            onClick={handleCreateAuthor}
-                        />
+                            <h4>Course Authors</h4>
+                            {courseAuthors.length > 0 ? (
+                                courseAuthors.map(author => (
+                                    <AuthorItem
+                                        key={author.id}
+                                        author={author}
+                                        buttonText="Delete author"
+                                        onButtonClick={handleDeleteAuthor}
+                                    />
+                                ))
+                            ) : (
+                                <p>Author list is empty</p>
+                            )}
+                        </div>
 
-                        <h4>Authors List</h4>
-                        {authors.length > 0 ? (
-                            authors.map(author => (
-                                <AuthorItem
-                                    key={author.id}
-                                    author={author}
-                                    buttonText="Add author"
-                                    onButtonClick={handleAddAuthor}
-                                />
-                            ))
-                        ) : (
-                            <p>No authors available</p>
-                        )}
+                        <div>
+                            <Button
+                                className={css.create__btn}
+                                buttonText="cancel"
+                                type="button"
+                                onClick={onCancel}
+                            />
+                            <Button
+                                className={css.create__btn}
+                                buttonText="create course"
+                                type="submit"
+                            />
+                        </div>
+                    </form>
+                </div>
 
-                        <h4>Course Authors</h4>
-                        {courseAuthors.length > 0 ? (
-                            courseAuthors.map(author => (
-                                <AuthorItem
-                                    key={author.id}
-                                    author={author}
-                                    buttonText="Delete author"
-                                    onButtonClick={handleDeleteAuthor}
-                                />
-                            ))
-                        ) : (
-                            <p>Author list is empty</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <Button
-                            className={css.create__btn}
-                            buttonText="cancel"
-                            type="button"
-                            onClick={onCancel}
-                        />
-                        <Button
-                            className={css.create__btn}
-                            buttonText="create course"
-                            type="submit"
-                        />
-                    </div>
-                </form>
             </div>
         </section>
     );
