@@ -1,6 +1,10 @@
 .logo {
-    width: 130px;
-    height: 50px;
     position: relative;
     z-index: 2;
+    flex: 0.9;
+
+    &__img {
+        width: 130px;
+        height: 50px;
+    }
 }

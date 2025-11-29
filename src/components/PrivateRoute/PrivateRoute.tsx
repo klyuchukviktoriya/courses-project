@@ -1,14 +1,15 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
+import { getIsAuth } from "@/store/selectors";
 
 type PrivateRouteProps = {
     children?: JSX.Element;
 };
 
-// If token is present, render protected content; otherwise redirect to login
 export default function PrivateRoute({ children }: PrivateRouteProps) {
-    const token = localStorage.getItem("token");
+    const isAuth = useAppSelector(getIsAuth);
 
-    if (!token) {
+    if (!isAuth) {
         return <Navigate to="/login" replace />;
     }
 

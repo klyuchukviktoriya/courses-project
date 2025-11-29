@@ -53,4 +53,11 @@
     .showBtn {
         @include btn($width: 180px);
     }
+
+    &__actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+    }
 }

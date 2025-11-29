@@ -1,31 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import Button from "@/common/Button/Button";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getIsAuth, getUserName } from "@/store/selectors";
+import { logout } from "@/store/user/userSlice";
 import Logo from "./components/Logo/Logo";
 import css from "./Header.module.scss";
-import { useLocation, useNavigate } from "react-router-dom";
 
-type HeaderProps = {
-    userName?: string;
-    isAuth?: boolean;
-    onLogout?: () => void;
-};
-
-export default function Header({ userName, isAuth, onLogout }: HeaderProps) {
-    useLocation(); // keep hook usage for router context
+export default function Header() {
     const navigate = useNavigate();
-
-    const storedToken = localStorage.getItem("token");
-    const storedName = localStorage.getItem("user") || localStorage.getItem("userName") || "";
-    const authenticated = typeof isAuth === "boolean" ? isAuth : Boolean(storedToken);
-    const displayName = (userName ?? storedName) || "User";
-    const showAuth = authenticated;
+    const dispatch = useAppDispatch();
+    const isAuth = useAppSelector(getIsAuth);
+    const userName = useAppSelector(getUserName) || "User";
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("userName");
         localStorage.removeItem("user");
-        if (onLogout) {
-            onLogout();
-        }
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        dispatch(logout());
         navigate("/login");
     };
 
@@ -34,17 +26,18 @@ export default function Header({ userName, isAuth, onLogout }: HeaderProps) {
             <div className={`${css.header__container} ${css.container}`}>
                 <Logo />
                 <h1>find your perfect course</h1>
-                {isAuth ? showAuth && (
+                {isAuth ? (
                     <div className={css.header__actions}>
-                        <span className={css.header__user}>{displayName}</span>
+                        <span className={css.header__user}>{userName}</span>
                         <Button
                             className={css.logBtn}
                             buttonText="logout"
                             onClick={handleLogout}
                         />
                     </div>
-                ) :
-                    <div className={css.header__empty}></div>}
+                ) : (
+                    <div className={css.header__empty}></div>
+                )}
 
             </div>
         </header>

@@ -1,10 +1,11 @@
-import { mockedAuthorsList } from "@/constants";
-import { Course } from "../../Course.types";
+import { Link } from "react-router-dom";
+import Button from "@/common/Button/Button";
 import getCourseDuration from "@/helpers/getCourseDuration";
 import formatCreationDate from "@/helpers/formatCreationDate";
-import Button from "@/common/Button/Button";
+import { useAppDispatch } from "@/store/hooks";
+import { deleteCourse } from "@/store/courses/coursesSlice";
+import { Course } from "../../Course.types";
 import css from "./CourseCard.module.scss";
-import { Link } from "react-router-dom";
 
 type CourseCardProps = {
     course: Course;
@@ -12,16 +13,19 @@ type CourseCardProps = {
 };
 
 export default function CourseCard({ course, authorsList }: CourseCardProps) {
+    const dispatch = useAppDispatch();
 
     const authors = course.authors
-        .map((author) => {
-            const found =
-                authorsList.find((a) => a.id === author)?.name ||
-                mockedAuthorsList.find((a) => a.id === author)?.name;
+        .map(author => {
+            const found = authorsList.find(a => a.id === author)?.name;
             return found || author;
         })
         .filter(Boolean)
         .join(", ");
+
+    const handleDelete = () => {
+        dispatch(deleteCourse(course.id));
+    };
 
     return (
         <div className={css.card}>
@@ -43,6 +47,10 @@ export default function CourseCard({ course, authorsList }: CourseCardProps) {
                     <Link to={`/courses/${course.id}`} style={{ display: "inline-block" }}>
                         <Button className={css.showBtn} buttonText="show course" />
                     </Link>
+                    <div className={css.card__actions}>
+                        <Button className={css.showBtn} buttonText="delete course" onClick={handleDelete} />
+                        <Button className={css.showBtn} buttonText="update course" type="button" />
+                    </div>
                 </div>
             </div>
         </div>

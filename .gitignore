@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# We don't commit package-lock.json cause student
+# We don"t commit package-lock.json cause student
 # potetially will use different Node.js version
 package-lock.json
 junit.xml

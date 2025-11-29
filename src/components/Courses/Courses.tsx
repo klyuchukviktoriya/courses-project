@@ -1,23 +1,43 @@
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "@/common/Button/Button";
 import { Course } from "./Course.types";
 import SearchBar from "./components/SearchBar/SearchBar";
 import CourseCard from "./components/CourseCard/CourseCard";
 import css from "./Courses.module.scss";
-import { Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { mockedAuthorsList, mockedCoursesList } from "@/constants";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getAuthors, getCourses, getToken } from "@/store/selectors";
+import { fetchAuthors, fetchCourses } from "@/services/api";
+import { setAuthors } from "@/store/authors/authorsSlice";
+import { setCourses } from "@/store/courses/coursesSlice";
 
-type CoursesProps = {
-    courses?: Course[];
-    authors?: { id: string; name: string }[];
-};
+export default function Courses() {
+    const dispatch = useAppDispatch();
+    const courses = useAppSelector(getCourses);
+    const authors = useAppSelector(getAuthors);
+    const token = useAppSelector(getToken);
 
-export default function Courses({
-    courses = mockedCoursesList,
-    authors = mockedAuthorsList,
-}: CoursesProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const [coursesResponse, authorsResponse] = await Promise.all([
+                    fetchCourses(token),
+                    fetchAuthors(token),
+                ]);
+                dispatch(setCourses(coursesResponse.result));
+                dispatch(setAuthors(authorsResponse.result));
+            } catch (error) {
+                console.error("Failed to load data", error);
+            }
+        };
+
+        if (!courses.length || !authors.length) {
+            void loadData();
+        }
+    }, [authors.length, courses.length, dispatch, token]);
 
     const filterCourses = useMemo(
         () => (list: Course[], query: string) => {
@@ -56,13 +76,12 @@ export default function Courses({
                 </div>
 
                 <ul className={css.coursesList}>
-                    {filteredCourses.map((course) => (
+                    {filteredCourses.map(course => (
                         <li key={course.id}>
                             <CourseCard course={course} authorsList={authors} />
                         </li>
                     ))}
                 </ul>
-
             </div>
         </section>
     );

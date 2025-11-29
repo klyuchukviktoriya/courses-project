@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "@/common/Input/Input";
 import Button from "@/common/Button/Button";
+import { useAppDispatch } from "@/store/hooks";
+import { login } from "@/store/user/userSlice";
+import { loginUser } from "@/services/api";
 import css from "./Login.module.scss";
-import { Link, useNavigate } from "react-router-dom";
 
-type LoginProps = {
-    onLoginSuccess?: (token: string, userName: string) => void;
-};
-
-export default function Login({ onLoginSuccess }: LoginProps) {
+export default function Login() {
+    const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -25,44 +25,47 @@ export default function Login({ onLoginSuccess }: LoginProps) {
             newErrors.email = "Enter a valid email";
 
         if (!password.trim()) newErrors.password = "Password is required";
-        else if (password.length < 6)
-            newErrors.password = "Password must be at least 6 characters";
+        else if (password.length < 6) newErrors.password = "Password must be at least 6 characters";
 
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                const response = await fetch("http://localhost:4000/login", {
-                    method: "POST",
-                    body: JSON.stringify({ email, password }),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+                const result = await loginUser(email, password);
 
-                const result = await response.json();
-
-                if (!response.ok || !result?.result) {
-                    setApiError(result?.result || "Login failed");
+                if (!result?.result) {
+                    setApiError("Login failed");
                     return;
                 }
+
+                const resolvedName =
+                    result.user?.name ||
+                    result.user?.email ||
+                    email.split("@")[0] ||
+                    "";
+
+                const resolvedEmail = result.user?.email || email;
+                const userData = {
+                    name: resolvedName,
+                    email: resolvedEmail,
+                };
+
+                localStorage.setItem("token", result.result);
+                localStorage.setItem("user", JSON.stringify(userData));
+                localStorage.setItem("userName", resolvedName);
+                localStorage.setItem("userEmail", resolvedEmail);
+
+                dispatch(
+                    login({
+                        token: result.result,
+                        name: resolvedName,
+                        email: resolvedEmail,
+                    })
+                );
 
                 setApiError("");
                 setEmail("");
                 setPassword("");
-                const resolvedName =
-                    result?.user?.name ||
-                    result?.user?.email ||
-                    email.split("@")[0] ||
-                    "";
-
-                localStorage.setItem("token", result.result);
-                localStorage.setItem("userName", resolvedName);
-                localStorage.setItem("user", resolvedName);
-
-                if (onLoginSuccess) {
-                    onLoginSuccess(result.result, resolvedName);
-                }
                 navigate("/courses");
             } catch (error) {
                 setApiError("Login failed. Please try again.");
@@ -79,7 +82,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     <form onSubmit={handleSubmit}>
                         <Input
                             labelText="Email"
-                            onChange={(e) => {
+                            onChange={e => {
                                 setEmail(e.target.value);
                                 if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
                             }}
@@ -92,7 +95,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
                         <Input
                             labelText="Password"
-                            onChange={(e) => {
+                            onChange={e => {
                                 setPassword(e.target.value);
                                 if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
                             }}
@@ -106,7 +109,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                         {apiError && <p className="error__message">{apiError}</p>}
 
                         <Button className={css.login__button} buttonText="login" type="submit" />
-                        <p>If you don't have an account you may{" "}
+                        <p>If you don"t have an account you may{" "}
                             <Link to="/registration" style={{ display: "inline-block" }}>Registration</Link>
                         </p>
                     </form>

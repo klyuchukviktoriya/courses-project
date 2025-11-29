@@ -1,30 +1,28 @@
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Input from "@/common/Input/Input";
-import { mockedAuthorsList } from "@/constants";
 import getCourseDuration from "@/helpers/getCourseDuration";
-import { useState } from "react";
 import AuthorItem from "../AuthorItem/AuthorItem";
 import Button from "@/common/Button/Button";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addAuthor, setAuthors } from "@/store/authors/authorsSlice";
+import { addCourse } from "@/store/courses/coursesSlice";
+import { getAuthors, getToken } from "@/store/selectors";
+import { fetchAuthors } from "@/services/api";
 import css from "./CreateCourse.module.scss";
 import { Course } from "../Courses/Course.types";
 
-const getInitialAuthors = () => mockedAuthorsList.map(author => ({ ...author }));
+export default function CreateCourse() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const authorsFromStore = useAppSelector(getAuthors);
+    const token = useAppSelector(getToken);
 
-type CreateCourseProps = {
-    onCancel: () => void;
-    onCreateCourse: (
-        newCourse: Course,
-        newAuthors: { id: string; name: string }[]
-    ) => void;
-};
-
-export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseProps) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [duration, setDuration] = useState("");
-    const [authors, setAuthors] = useState(getInitialAuthors);
-    const [courseAuthors, setCourseAuthors] = useState<
-        { id: string; name: string }[]
-    >([]);
+    const [availableAuthors, setAvailableAuthors] = useState(authorsFromStore);
+    const [courseAuthors, setCourseAuthors] = useState<{ id: string; name: string }[]>([]);
     const [newAuthorName, setNewAuthorName] = useState("");
     const [errors, setErrors] = useState<{
         title?: string;
@@ -32,6 +30,26 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
         duration?: string;
         authorName?: string;
     }>({});
+
+    useEffect(() => {
+        const loadAuthors = async () => {
+            try {
+                const response = await fetchAuthors(token);
+                dispatch(setAuthors(response.result));
+            } catch (error) {
+                console.error("Failed to load authors", error);
+            }
+        };
+
+        if (!authorsFromStore.length) {
+            void loadAuthors();
+        }
+    }, [authorsFromStore.length, dispatch, token]);
+
+    useEffect(() => {
+        const courseAuthorIds = new Set(courseAuthors.map(a => a.id));
+        setAvailableAuthors(authorsFromStore.filter(a => !courseAuthorIds.has(a.id)));
+    }, [authorsFromStore, courseAuthors]);
 
     const generateId = () => Math.random().toString(36).slice(2, 10);
 
@@ -45,22 +63,18 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
         }
 
         const newAuthor = { id: generateId(), name: newAuthorName.trim() };
-        setAuthors(prev => [...prev, newAuthor]);
+        dispatch(addAuthor(newAuthor));
         setNewAuthorName("");
         setErrors(prev => ({ ...prev, authorName: "" }));
     };
 
     const handleAddAuthor = (id: string) => {
-        const author = authors.find(a => a.id === id);
+        const author = availableAuthors.find(a => a.id === id);
         if (!author) return;
         setCourseAuthors(prev => [...prev, author]);
-        setAuthors(prev => prev.filter(a => a.id !== id));
     };
 
     const handleDeleteAuthor = (id: string) => {
-        const author = courseAuthors.find(a => a.id === id);
-        if (!author) return;
-        setAuthors(prev => [...prev, author]);
         setCourseAuthors(prev => prev.filter(a => a.id !== id));
     };
 
@@ -68,8 +82,7 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
         const newErrors: typeof errors = {};
         if (!title.trim()) newErrors.title = "Required";
         if (!description.trim()) newErrors.description = "Required";
-        if (!duration.trim() || Number(duration) <= 0)
-            newErrors.duration = "Invalid duration";
+        if (!duration.trim() || Number(duration) <= 0) newErrors.duration = "Invalid duration";
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
@@ -83,25 +96,22 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
             authors: courseAuthors.map(a => a.id),
         };
 
-        const newlyCreatedAuthors = courseAuthors.filter(
-            a => !mockedAuthorsList.some(ma => ma.id === a.id)
-        );
-
-        onCreateCourse(newCourse, newlyCreatedAuthors);
-        onCancel();
+        dispatch(addCourse(newCourse));
+        navigate("/courses");
 
         setTitle("");
         setDescription("");
         setDuration("");
         setCourseAuthors([]);
-        setAuthors(getInitialAuthors());
         setNewAuthorName("");
     };
+
+    const courseDuration = useMemo(() => getCourseDuration(Number(duration)), [duration]);
 
     return (
         <section className={css.create}>
             <div className={`${css.create__container} ${css.container}`}>
-                <h2>Course Edit/Create Page</h2>
+                <h2>Course Edit / Create Page</h2>
                 <div className={css.create__wrapper}>
                     <h3>Main Info</h3>
                     <form
@@ -120,7 +130,6 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
                                 errorMessage={errors.title}
                                 value={title}
                             />
-
                             <Input
                                 labelText="Description"
                                 onChange={e => setDescription(e.target.value)}
@@ -130,71 +139,81 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
                                 errorMessage={errors.description}
                                 value={description}
                             />
+
                         </div>
 
                         <div>
                             <h3>Duration</h3>
-                            <Input
-                                labelText="Duration (min)"
-                                onChange={e =>
-                                    setDuration(e.target.value.replace(/\D/g, ""))
-                                }
-                                placeholderText="Duration"
-                                id="duration"
-                                inputType="text"
-                                errorMessage={errors.duration}
-                                value={duration}
-                            />
-                            <p>{getCourseDuration(Number(duration))}</p>
+                            <div className={css.create__duration}>
+                                <Input
+                                    labelText="Duration (min)"
+                                    onChange={e => setDuration(e.target.value.replace(/\D/g, ""))}
+                                    placeholderText="Duration"
+                                    id="duration"
+                                    inputType="text"
+                                    errorMessage={errors.duration}
+                                    value={duration}
+                                />
+                                <p>{courseDuration}</p>
+                            </div>
+
                         </div>
 
                         <div>
                             <h3>Authors</h3>
-
-                            <Input
-                                labelText="Author Name"
-                                onChange={e => setNewAuthorName(e.target.value)}
-                                placeholderText="Author Name"
-                                id="authorName"
-                                inputType="text"
-                                value={newAuthorName}
-                                errorMessage={errors.authorName}
-                            />
-
-                            <Button
-                                className={css.create__btn}
-                                buttonText="Create author"
-                                type="button"
-                                onClick={handleCreateAuthor}
-                            />
-
-                            <h4>Authors List</h4>
-                            {authors.length > 0 ? (
-                                authors.map(author => (
-                                    <AuthorItem
-                                        key={author.id}
-                                        author={author}
-                                        buttonText="Add author"
-                                        onButtonClick={handleAddAuthor}
+                            <div className={css.create__authorsDiv}>
+                                <div className={css.create__createAuthors}>
+                                    <Input
+                                        labelText="Author Name"
+                                        onChange={e => setNewAuthorName(e.target.value)}
+                                        placeholderText="Author Name"
+                                        id="authorName"
+                                        inputType="text"
+                                        value={newAuthorName}
+                                        errorMessage={errors.authorName}
                                     />
-                                ))
-                            ) : (
-                                <p>No authors available</p>
-                            )}
 
-                            <h4>Course Authors</h4>
-                            {courseAuthors.length > 0 ? (
-                                courseAuthors.map(author => (
-                                    <AuthorItem
-                                        key={author.id}
-                                        author={author}
-                                        buttonText="Delete author"
-                                        onButtonClick={handleDeleteAuthor}
+                                    <Button
+                                        className={css.create__btn}
+                                        buttonText="Create author"
+                                        type="button"
+                                        onClick={handleCreateAuthor}
                                     />
-                                ))
-                            ) : (
-                                <p>Author list is empty</p>
-                            )}
+                                </div>
+
+                                <div>
+                                    <h4>Authors List</h4>
+                                    {availableAuthors.length > 0 ? (
+                                        availableAuthors.map(author => (
+                                            <AuthorItem
+                                                key={author.id}
+                                                author={author}
+                                                buttonText="Add author"
+                                                onButtonClick={handleAddAuthor}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p>No authors available</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <h4>Course Authors</h4>
+                                    {courseAuthors.length > 0 ? (
+                                        courseAuthors.map(author => (
+                                            <AuthorItem
+                                                key={author.id}
+                                                author={author}
+                                                buttonText="Delete author"
+                                                onButtonClick={handleDeleteAuthor}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p>Author list is empty</p>
+                                    )}
+                                </div>
+                            </div>
+
+
                         </div>
 
                         <div>
@@ -202,7 +221,7 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
                                 className={css.create__btn}
                                 buttonText="cancel"
                                 type="button"
-                                onClick={onCancel}
+                                onClick={() => navigate("/courses")}
                             />
                             <Button
                                 className={css.create__btn}
@@ -213,7 +232,7 @@ export default function CreateCourse({ onCancel, onCreateCourse }: CreateCourseP
                     </form>
                 </div>
 
-            </div>
-        </section>
+            </div >
+        </section >
     );
 }
