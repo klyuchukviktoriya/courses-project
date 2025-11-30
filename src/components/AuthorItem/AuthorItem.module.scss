@@ -1,0 +1,19 @@
+@use "../../common/styles/utils/index" as *;
+
+.authorItem {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 24px;
+
+    &__btn {
+        @include btn($width: 30px, $height: 28px);
+        background: transparent;
+        border: 0.2px solid var(--shadow);
+
+        svg {
+            fill: var(--accent);
+            width: 16px;
+        }
+    }
+}

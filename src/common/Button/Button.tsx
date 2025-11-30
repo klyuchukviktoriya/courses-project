@@ -4,12 +4,13 @@ type ButtonProps = {
     className: string;
     type?: "button" | "submit" | "reset";
     disabled?: boolean;
+    children?: any;
 };
 
-export default function Button({ buttonText, onClick, className, type = "button" }: ButtonProps) {
+export default function Button({ buttonText, onClick, className, type = "button", children }: ButtonProps) {
     return (
         <button className={className} onClick={onClick} type={type}>
-            {buttonText}
+            {children ?? buttonText}
         </button>
     );
 }

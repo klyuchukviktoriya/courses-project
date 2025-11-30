@@ -3,6 +3,10 @@
 .login {
     @include user-page;
 
+    input {
+        margin-bottom: 24px;
+    }
+
     &__button {
         @include btn;
     }

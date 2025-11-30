@@ -5,6 +5,7 @@ import formatCreationDate from "@/helpers/formatCreationDate";
 import { useAppSelector } from "@/store/hooks";
 import { getAuthors, getCourses } from "@/store/selectors";
 import css from "./CourseInfo.module.scss";
+import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 
 export default function CourseInfo() {
     const { courseId } = useParams();
@@ -12,7 +13,7 @@ export default function CourseInfo() {
     const authors = useAppSelector(getAuthors);
     const course = courses.find(c => c.id === courseId);
 
-    if (!course) return <h2>Course not found</h2>;
+    if (!course) return <EmptyCourseList />;
 
     const authorsNames = course.authors
         .map(authorId => authors.find(a => a.id === authorId)?.name)

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import Input from "@/common/Input/Input";
 import getCourseDuration from "@/helpers/getCourseDuration";
@@ -57,7 +58,7 @@ export default function CreateCourse() {
         if (newAuthorName.trim().length < 2) {
             setErrors(prev => ({
                 ...prev,
-                authorName: "Author name must be at least 2 characters",
+                authorName: "Author name should be at least 2 characters",
             }));
             return;
         }
@@ -80,9 +81,9 @@ export default function CreateCourse() {
 
     const handleCreateCourse = () => {
         const newErrors: typeof errors = {};
-        if (!title.trim()) newErrors.title = "Required";
-        if (!description.trim()) newErrors.description = "Required";
-        if (!duration.trim() || Number(duration) <= 0) newErrors.duration = "Invalid duration";
+        if (!title.trim()) newErrors.title = "Title is required and should be at least 2 characters";
+        if (!description.trim()) newErrors.description = "Description is required and should be at least 2 characters";
+        if (!duration.trim() || Number(duration) <= 0) newErrors.duration = "Duration is required and should be greater than 0";
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length > 0) return;
@@ -161,25 +162,29 @@ export default function CreateCourse() {
 
                         <div>
                             <h3>Authors</h3>
-                            <div className={css.create__authorsDiv}>
-                                <div className={css.create__createAuthors}>
-                                    <Input
-                                        labelText="Author Name"
-                                        onChange={e => setNewAuthorName(e.target.value)}
-                                        placeholderText="Author Name"
-                                        id="authorName"
-                                        inputType="text"
-                                        value={newAuthorName}
-                                        errorMessage={errors.authorName}
-                                    />
+                            <div className={css.create__createAuthors}>
+                                <Input
+                                    labelText="Author Name"
+                                    onChange={e => setNewAuthorName(e.target.value)}
+                                    placeholderText="Author Name"
+                                    id="authorName"
+                                    inputType="text"
+                                    value={newAuthorName}
+                                    errorMessage={errors.authorName}
+                                />
 
-                                    <Button
-                                        className={css.create__btn}
-                                        buttonText="Create author"
-                                        type="button"
-                                        onClick={handleCreateAuthor}
-                                    />
-                                </div>
+                                <Button
+                                    className={css.create__btn}
+                                    buttonText="Create author"
+                                    type="button"
+                                    onClick={handleCreateAuthor}
+                                />
+                            </div>
+
+
+                            <div className={css.create__authorsDiv}>
+
+
 
                                 <div>
                                     <h4>Authors List</h4>
@@ -195,6 +200,7 @@ export default function CreateCourse() {
                                     ) : (
                                         <p>No authors available</p>
                                     )}
+
                                 </div>
                                 <div>
                                     <h4>Course Authors</h4>
@@ -216,7 +222,7 @@ export default function CreateCourse() {
 
                         </div>
 
-                        <div>
+                        <div className={css.create__btns}>
                             <Button
                                 className={css.create__btn}
                                 buttonText="cancel"
